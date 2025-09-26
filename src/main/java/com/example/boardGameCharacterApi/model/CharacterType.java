@@ -1,0 +1,25 @@
+package com.example.boardgamecharacterapi.model;
+
+import jakarta.persistence.*;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.context.annotation.Description;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CharacterType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Name
+    private String name;
+    @Description
+    private String description;
+
+    // Getters & Setters
+}
