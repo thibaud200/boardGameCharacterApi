@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Description;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "charactersType")       
 public class CharacterType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,3 +24,4 @@ public class CharacterType {
 
     // Getters & Setters
 }
+
