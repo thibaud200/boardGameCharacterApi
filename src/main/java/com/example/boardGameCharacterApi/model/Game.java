@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "game")       
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +25,5 @@ public class Game {
     private Integer releaseYear;
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private List<Character> characters;
+
 }
