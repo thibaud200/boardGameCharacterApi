@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "skills")       
 public class Skills {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,3 +21,4 @@ public class Skills {
     @JoinColumn(name = "character_id")
     private Character character;
 }
+
