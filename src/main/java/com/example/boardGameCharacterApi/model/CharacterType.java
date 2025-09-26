@@ -22,6 +22,8 @@ public class CharacterType {
     @Description
     private String description;
 
-    // Getters & Setters
+    @ManyToMany(mappedBy = "types")
+    private Set<Character> characters;
 }
+
 
