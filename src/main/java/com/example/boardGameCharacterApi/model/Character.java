@@ -18,17 +18,17 @@ public class Character {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Name
+    @Column(nullable = false)
     private String name;
 
-    @Description()
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Skill> skills;
 
     @ManyToMany
@@ -37,4 +37,6 @@ public class Character {
             joinColumns = @JoinColumn(name = "character_id"),
             inverseJoinColumns = @JoinColumn(name = "type_id")
     )
+    private Set<CharacterType> types;
 }
+
