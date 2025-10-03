@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,8 +25,7 @@ public class Games {
     private String description;
     @Column(nullable = false)
     private Integer releaseYear;
-    @OneToMany(mappedBy = "games", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Characters> characters;
-
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Characters> characters = new HashSet<>();
 }
 

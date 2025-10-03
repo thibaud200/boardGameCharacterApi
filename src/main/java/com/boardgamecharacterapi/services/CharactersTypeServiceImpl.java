@@ -1,6 +1,6 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.CharactersType;
+import com.boardgamecharacterapi.models.dto.TypeDTO;
 import com.boardgamecharacterapi.repository.CharactersTypeRepository;
 import com.boardgamecharacterapi.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,18 +22,18 @@ public class CharactersTypeServiceImpl implements CharactersTypeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CharactersType> getAllCharactersType() {
+    public List<TypeDTO> getAllCharactersType() {
         return charactersTypeRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CharactersType> getCharacterTypeById(Long id) {
+    public Optional<TypeDTO> getCharacterTypeById(Long id) {
         return charactersTypeRepository.findById(id);
     }
 
     @Override
-    public CharactersType saveCharacterType(CharactersType characterType) {
+    public TypeDTO saveCharacterType(TypeDTO characterType) {
         if (characterType == null) {
             throw new IllegalArgumentException("CharacterType cannot be null");
         }
@@ -41,7 +41,7 @@ public class CharactersTypeServiceImpl implements CharactersTypeService {
     }
 
     @Override
-    public CharactersType updateCharacterType(Long id, CharactersType characterType) {
+    public TypeDTO updateCharacterType(Long id, TypeDTO characterType) {
         if (characterType == null) {
             throw new IllegalArgumentException("CharacterType cannot be null");
         }

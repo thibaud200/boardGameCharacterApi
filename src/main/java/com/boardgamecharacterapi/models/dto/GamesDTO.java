@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.boardgamecharacterapi.models.Characters;
 import java.util.List;
 
 @Data
@@ -28,5 +27,5 @@ public class GamesDTO {
     private Long releaseYear;
 
     @Max(value = 50, message = "maximum Character name must be at most 50")
-    private List<Characters> characters;
+    private List<CharactersDTO> characters;
 }

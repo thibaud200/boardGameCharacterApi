@@ -1,12 +1,9 @@
 package com.boardgamecharacterapi.mapper;
 
 import com.boardgamecharacterapi.models.Characters;
-import com.boardgamecharacterapi.models.CharactersType;
 import com.boardgamecharacterapi.models.dto.CharactersDTO;
 import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class CharactersMapper {
@@ -22,15 +19,11 @@ public class CharactersMapper {
                 .description(character.getDescription())
                 .gameId(character.getGame() != null ? character.getGame().getId() : null)
                 .gameName(character.getGame() != null ? character.getGame().getTitle() : null)
+                .typeNames(character.getType() != null ? character.getType().getName() : null)
                 .skills(character.getSkills() != null ?
                         character.getSkills().stream()
                                 .map(this::skillToDTO)
-                                .collect(Collectors.toList()) : null)
-                .typeNames(character.getTypes() != null ?
-                        character.getTypes().stream()
-                                .map(CharactersType::getName)
-                                .collect(Collectors.toList()) : null)
-
+                                .toList() : null)
                 .build();
     }
 

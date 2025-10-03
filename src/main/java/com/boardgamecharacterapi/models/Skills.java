@@ -18,12 +18,13 @@ public class Skills {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "character_id")
-    private Character character;
+    @OneToMany(mappedBy = "characters", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Characters> characters;
 }
 
 

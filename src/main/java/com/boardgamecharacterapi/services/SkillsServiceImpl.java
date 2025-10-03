@@ -1,13 +1,12 @@
 package com.boardgamecharacterapi.services;
 
 import com.boardgamecharacterapi.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import com.boardgamecharacterapi.repository.SkillsRepository;
-import com.boardgamecharacterapi.models.Skills;
+import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -23,18 +22,18 @@ public class SkillsServiceImpl implements SkillsService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Skills> getAllSkills() {
+    public List<SkillsDTO> getAllSkills() {
         return skillsRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Skills> getSkillsById(Long id) {
+    public Optional<SkillsDTO> getSkillsById(Long id) {
         return skillsRepository.findById(id);
     }
 
     @Override
-    public Skills saveSkill(Skills skill) {
+    public SkillsDTO saveSkill(SkillsDTO skill) {
         if (skill == null) {
             throw new IllegalArgumentException("Skill cannot be null");
         }
@@ -42,7 +41,7 @@ public class SkillsServiceImpl implements SkillsService {
     }
 
     @Override
-    public Skills updateSkill(Long id, Skills skill) {
+    public SkillsDTO updateSkill(Long id, SkillsDTO skill) {
         if (skill == null) {
             throw new IllegalArgumentException("Skill cannot be null");
         }
@@ -55,9 +54,6 @@ public class SkillsServiceImpl implements SkillsService {
                     }
                     if (skill.getDescription() != null) {
                         existingSkill.setDescription(skill.getDescription());
-                    }
-                    if (skill.getLevel() != null) {
-                        existingSkill.setLevel(skill.getLevel());
                     }
                     return skillsRepository.save(existingSkill);
                 })

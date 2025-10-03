@@ -1,14 +1,15 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.Characters;
+import com.boardgamecharacterapi.models.dto.CharactersDTO;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface CharactersService {
-    List<Characters> getAllCharacters();
-    Optional<Characters> getCharacterById(Long id);
-    List<Characters> getCharactersByGameId(Long gameId);
-    Characters saveCharacter(Characters character);
-    Characters updateCharacter(Long id, Characters character);
+    List<CharactersDTO> getAllCharacters();
+    Optional<CharactersDTO> getCharacterById(Long id);
+    List<CharactersDTO> getCharactersByGameId(Long gameId);
+    CharactersDTO saveCharacter(CharactersDTO character);
+    CharactersDTO updateCharacter(Long id, CharactersDTO character);
     void deleteCharacter(Long id);
 }

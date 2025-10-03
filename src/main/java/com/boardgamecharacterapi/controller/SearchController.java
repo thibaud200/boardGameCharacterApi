@@ -3,10 +3,12 @@ package com.boardgamecharacterapi.controller;
 import com.boardgamecharacterapi.services.*;
 import com.boardgamecharacterapi.models.dto.CharactersDTO;
 import com.boardgamecharacterapi.models.dto.GamesDTO;
+import com.boardgamecharacterapi.mapper.CharactersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/search")
@@ -16,7 +18,7 @@ public class SearchController {
     private final CharactersService charactersService;
     private final SkillsService skillsService;
     private final CharactersTypeService charactersTypeService;
-    private final CharactersTypeAssignementService charactersTypeAssignementService;
+    private final CharactersMapper charactersMapper;
 
     @Autowired
     public SearchController(
@@ -24,19 +26,24 @@ public class SearchController {
             CharactersService charactersService,
             SkillsService skillsService,
             CharactersTypeService charactersTypeService,
-            CharactersTypeAssignementService charactersTypeAssignementService
+            CharactersMapper charactersMapper
     ) {
         this.gamesService = gamesService;
         this.charactersService = charactersService;
         this.skillsService = skillsService;
         this.charactersTypeService = charactersTypeService;
-        this.charactersTypeAssignementService = charactersTypeAssignementService;
+        this.charactersMapper = charactersMapper;
     }
 
     @GetMapping("/games/{gameId}/characters")
     public ResponseEntity<List<CharactersDTO>> searchCharacters(@PathVariable Long gameId) {
-        // À implémenter : récupérer les personnages d'un jeu et les mapper en DTO
-        List<CharactersDTO> characters = charactersService.getCharacterByGameId(gameId);
+        List<CharactersDTO> characters = charactersService.getCharactersByGameId(gameId);
+        return ResponseEntity.ok(characters);
+    }
+
+    @GetMapping("/characters")
+    public ResponseEntity<List<CharactersDTO>> getAllCharacters() {
+        List<CharactersDTO> characters = charactersService.getAllCharacters();
         return ResponseEntity.ok(characters);
     }
 
@@ -48,7 +55,9 @@ public class SearchController {
 
     @GetMapping("/games/{gameId}")
     public ResponseEntity<GamesDTO> getGameById(@PathVariable Long gameId) {
-        GamesDTO game = gamesService.getGameById(gameId);
-        return ResponseEntity.ok(game);
+        Optional<GamesDTO> gameOpt = gamesService.getGameById(gameId);
+        return gameOpt
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,6 +1,6 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.Characters;
+import com.boardgamecharacterapi.models.dto.CharactersDTO;
 import com.boardgamecharacterapi.repository.CharactersRepository;
 import com.boardgamecharacterapi.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,25 +22,25 @@ public class CharactersServiceImpl implements CharactersService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Characters> getAllCharacters() {
+    public List<CharactersDTO> getAllCharacters() {
         return charactersRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Characters> getCharacterById(Long id) {
+    public Optional<CharactersDTO> getCharacterById(Long id) {
         return charactersRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Characters> getCharactersByGameId(Long gameId) {
+    public List<CharactersDTO> getCharactersByGameId(Long gameId) {
         // Cette méthode nécessite une requête custom dans le repository
         return charactersRepository.findByGameId(gameId);
     }
 
     @Override
-    public Characters saveCharacter(Characters character) {
+    public CharactersDTO saveCharacter(CharactersDTO character) {
         if (character == null) {
             throw new IllegalArgumentException("Character cannot be null");
         }
@@ -48,7 +48,7 @@ public class CharactersServiceImpl implements CharactersService {
     }
 
     @Override
-    public Characters updateCharacter(Long id, Characters character) {
+    public CharactersDTO updateCharacter(Long id, CharactersDTO character) {
         if (character == null) {
             throw new IllegalArgumentException("Character cannot be null");
         }
@@ -62,8 +62,8 @@ public class CharactersServiceImpl implements CharactersService {
                     if (character.getDescription() != null) {
                         existingCharacter.setDescription(character.getDescription());
                     }
-                    if (character.getGame() != null) {
-                        existingCharacter.setGame(character.getGame());
+                    if (character.getGameName() != null) {
+                        existingCharacter.setGameName(character.getGameName());
                     }
                     return charactersRepository.save(existingCharacter);
                 })

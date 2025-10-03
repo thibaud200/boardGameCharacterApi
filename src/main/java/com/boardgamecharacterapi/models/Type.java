@@ -1,8 +1,10 @@
 package com.boardgamecharacterapi.models;
 
 import jakarta.persistence.*;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "characters_types")
-public class CharactersType {
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

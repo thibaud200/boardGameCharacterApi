@@ -1,6 +1,6 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.Games;
+import com.boardgamecharacterapi.models.dto.GamesDTO;
 import com.boardgamecharacterapi.repository.GamesRepository;
 import com.boardgamecharacterapi.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,18 +22,18 @@ public class GamesServiceImpl implements GamesService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Games> getAllGames() {
+    public List<GamesDTO> getAllGames() {
         return gamesRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Games> getGameById(Long id) {
+    public Optional<GamesDTO> getGameById(Long id) {
         return gamesRepository.findById(id);
     }
 
     @Override
-    public Games saveGame(Games game) {
+    public GamesDTO saveGame(GamesDTO game) {
         if (game == null) {
             throw new IllegalArgumentException("Game cannot be null");
         }
@@ -41,7 +41,7 @@ public class GamesServiceImpl implements GamesService {
     }
 
     @Override
-    public Games updateGame(Long id, Games game) {
+    public GamesDTO updateGame(Long id, GamesDTO game) {
         if (game == null) {
             throw new IllegalArgumentException("Game cannot be null");
         }

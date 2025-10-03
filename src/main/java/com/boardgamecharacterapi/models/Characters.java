@@ -3,7 +3,6 @@ package com.boardgamecharacterapi.models;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import lombok.*;
@@ -13,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "characters")    
+@Table(name = "characters")
 public class Characters {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,18 +25,19 @@ public class Characters {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "games_id")
+    @JoinColumn(name = "game_id")
     private Games game;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private Type type;
 
     @ManyToMany
     @JoinTable(
-            name = "character_skills",
-            joinColumns = @JoinColumn(name = "character_id"),
+            name = "characters_skills",
+            joinColumns = @JoinColumn(name = "idCharacter"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
-
-    private Set<CharactersType> types = new HashSet<>();
-
     private Set<Skills> skills = new HashSet<>();
 }
 

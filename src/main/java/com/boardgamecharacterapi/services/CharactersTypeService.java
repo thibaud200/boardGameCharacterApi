@@ -1,13 +1,14 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.CharactersType;
+import com.boardgamecharacterapi.models.dto.TypeDTO;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface CharactersTypeService {
-    List<CharactersType> getAllCharactersType();
-    Optional<CharactersType> getCharacterTypeById(Long id);
-    CharactersType saveCharacterType(CharactersType characterType);
-    CharactersType updateCharacterType(Long id, CharactersType characterType);
+    List<TypeDTO> getAllCharactersType();
+    Optional<TypeDTO> getCharacterTypeById(Long id);
+    TypeDTO saveCharacterType(TypeDTO characterType);
+    TypeDTO updateCharacterType(Long id, TypeDTO characterType);
     void deleteCharacterType(Long id);
 }

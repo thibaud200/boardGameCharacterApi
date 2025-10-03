@@ -1,6 +1,5 @@
 package com.boardgamecharacterapi.models.dto;
 
-import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -32,6 +30,6 @@ public class CharactersDTO {
 
     private String gameName; // Nom du jeu pour affichage
 
-    private List<String> typeNames;   // ou List<CharactersTypeDTO>
+    private String typeNames;   // ou List<CharactersTypeDTO>
     private List<SkillsDTO> skills;
 }

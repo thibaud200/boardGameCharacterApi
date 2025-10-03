@@ -1,13 +1,13 @@
 package com.boardgamecharacterapi.services;
 
-import com.boardgamecharacterapi.models.Skills;
+import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface SkillsService {
-    List<Skills> getAllSkills();
-    Optional<Skills> getSkillsById(Long id);
-    Skills saveSkill(Skills skill);
-    Skills updateSkill(Long id, Skills skill);
+    List<SkillsDTO> getAllSkills();
+    Optional<SkillsDTO> getSkillsById(Long id);
+    SkillsDTO saveSkill(SkillsDTO skill);
+    SkillsDTO updateSkill(Long id, SkillsDTO skill);
     void deleteSkill(Long id);
 }

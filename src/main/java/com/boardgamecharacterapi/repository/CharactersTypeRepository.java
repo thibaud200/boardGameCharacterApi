@@ -1,17 +1,17 @@
 package com.boardgamecharacterapi.repository;
 
-import com.boardgamecharacterapi.models.CharactersType;
+import com.boardgamecharacterapi.models.dto.TypeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CharactersTypeRepository extends JpaRepository<CharactersType, Long> {
+public interface CharactersTypeRepository extends JpaRepository<TypeDTO, Long> {
 
     // Méthode pour récupérer toutes les assignations d'un personnage
-    List<CharactersType> findByCharacterId(Long characterId);
+    List<TypeDTO> findByCharacterId(Long characterId);
 
     // Méthode pour récupérer toutes les assignations d'un type
-    List<CharactersType> findByCharactersTypeId(Long typeId);
+    List<TypeDTO> findByCharactersTypeId(Long typeId);
 }
