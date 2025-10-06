@@ -6,8 +6,9 @@ import java.util.Optional;
 
 public interface GamesService {
     List<GamesDTO> getAllGames();
+    List<GamesDTO> searchGamesByTitle(String title);
     Optional<GamesDTO> getGameById(Long id);
-    GamesDTO saveGame(GamesDTO game);
-    GamesDTO updateGame(Long id, GamesDTO game);
+    GamesDTO saveGame(GamesDTO gameDTO);
+    GamesDTO updateGame(GamesDTO gameDTO);
     void deleteGame(Long id);
 }

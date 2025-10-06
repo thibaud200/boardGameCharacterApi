@@ -1,10 +1,8 @@
 package com.boardgamecharacterapi.mapper;
 
-import com.boardgamecharacterapi.models.dto.CharactersDTO;
 import com.boardgamecharacterapi.models.Games;
 import com.boardgamecharacterapi.models.dto.GamesDTO;
 import org.springframework.stereotype.Component;
-import java.util.stream.Collectors;
 
 @Component
 public class GamesMapper {
@@ -27,7 +25,7 @@ public class GamesMapper {
                 .characters(game.getCharacters() != null ?
                         game.getCharacters().stream()
                                 .map(charactersMapper::toDTO)
-                                .collect(Collectors.toList()) : null)
+                                .toList() : null)
                 .build();
     }
 

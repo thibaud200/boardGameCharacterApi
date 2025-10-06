@@ -10,6 +10,6 @@ public interface CharactersService {
     Optional<CharactersDTO> getCharacterById(Long id);
     List<CharactersDTO> getCharactersByGameId(Long gameId);
     CharactersDTO saveCharacter(CharactersDTO character);
-    CharactersDTO updateCharacter(Long id, CharactersDTO character);
+    CharactersDTO updateCharacter(CharactersDTO character);
     void deleteCharacter(Long id);
 }

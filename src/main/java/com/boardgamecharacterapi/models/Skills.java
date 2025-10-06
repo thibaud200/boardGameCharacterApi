@@ -11,20 +11,20 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "skills")       
+@Table(name = "skills")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Skills {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
-    @Column(nullable = true, columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "character_id")
-    @OneToMany(mappedBy = "characters", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Characters> characters;
+    // 🔗 Relation inverse vers Characters
+    @ManyToMany(mappedBy = "skills")
+    private Set<Characters> characters = new HashSet<>();
 }
-
-

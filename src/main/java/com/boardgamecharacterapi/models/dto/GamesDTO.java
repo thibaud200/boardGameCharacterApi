@@ -24,7 +24,7 @@ public class GamesDTO {
     private String description;
 
     @Size(max = 4, message = "Year of release must be 4 characters")
-    private Long releaseYear;
+    private Integer releaseYear;
 
     @Max(value = 50, message = "maximum Character name must be at most 50")
     private List<CharactersDTO> characters;

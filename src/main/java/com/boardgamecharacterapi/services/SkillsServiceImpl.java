@@ -1,13 +1,14 @@
 package com.boardgamecharacterapi.services;
 
 import com.boardgamecharacterapi.ResourceNotFoundException;
+import com.boardgamecharacterapi.models.Skills;
+import com.boardgamecharacterapi.models.dto.SkillsDTO;
+import com.boardgamecharacterapi.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import com.boardgamecharacterapi.repository.SkillsRepository;
-import com.boardgamecharacterapi.models.dto.SkillsDTO;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -15,7 +16,6 @@ public class SkillsServiceImpl implements SkillsService {
 
     private final SkillsRepository skillsRepository;
 
-    // Constructor injection (meilleure pratique que @Autowired sur le champ)
     public SkillsServiceImpl(SkillsRepository skillsRepository) {
         this.skillsRepository = skillsRepository;
     }
@@ -23,41 +23,38 @@ public class SkillsServiceImpl implements SkillsService {
     @Override
     @Transactional(readOnly = true)
     public List<SkillsDTO> getAllSkills() {
-        return skillsRepository.findAll();
+        return skillsRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<SkillsDTO> getSkillsById(Long id) {
-        return skillsRepository.findById(id);
-    }
-
-    @Override
-    public SkillsDTO saveSkill(SkillsDTO skill) {
-        if (skill == null) {
-            throw new IllegalArgumentException("Skill cannot be null");
-        }
-        return skillsRepository.save(skill);
-    }
-
-    @Override
-    public SkillsDTO updateSkill(Long id, SkillsDTO skill) {
-        if (skill == null) {
-            throw new IllegalArgumentException("Skill cannot be null");
-        }
-
         return skillsRepository.findById(id)
-                .map(existingSkill -> {
-                    // Mise à jour des champs (adapter selon vos attributs)
-                    if (skill.getName() != null) {
-                        existingSkill.setName(skill.getName());
-                    }
-                    if (skill.getDescription() != null) {
-                        existingSkill.setDescription(skill.getDescription());
-                    }
-                    return skillsRepository.save(existingSkill);
-                })
+                .map(this::convertToDTO);
+    }
+
+    @Override
+    public SkillsDTO saveSkill(SkillsDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("Skill cannot be null");
+        }
+        Skills entity = convertToEntity(dto);
+        Skills saved = skillsRepository.save(entity);
+        return convertToDTO(saved);
+    }
+
+    @Override
+    public SkillsDTO updateSkill(Long id, SkillsDTO dto) {
+        Skills existing = skillsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id: " + id));
+
+        if (dto.getName() != null) existing.setName(dto.getName());
+        if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
+
+        Skills updated = skillsRepository.save(existing);
+        return convertToDTO(updated);
     }
 
     @Override
@@ -66,5 +63,22 @@ public class SkillsServiceImpl implements SkillsService {
             throw new ResourceNotFoundException("Skill not found with id: " + id);
         }
         skillsRepository.deleteById(id);
+    }
+
+    // 🔁 Conversions
+    private SkillsDTO convertToDTO(Skills skill) {
+        return SkillsDTO.builder()
+                .id(skill.getId())
+                .name(skill.getName())
+                .description(skill.getDescription())
+                .build();
+    }
+
+    private Skills convertToEntity(SkillsDTO dto) {
+        return Skills.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .build();
     }
 }
