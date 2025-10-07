@@ -1,11 +1,9 @@
 package com.boardgamecharacterapi.controller;
 
 import com.boardgamecharacterapi.models.dto.CharactersDTO;
-import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import com.boardgamecharacterapi.models.dto.TypeDTO;
 import com.boardgamecharacterapi.services.CharactersService;
 import com.boardgamecharacterapi.services.CharactersTypeService;
-import com.boardgamecharacterapi.services.SkillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +16,14 @@ import java.util.List;
 public class CharactersController {
 
     private final CharactersService charactersService;
-    private final SkillsService skillsService;
     private final CharactersTypeService charactersTypeService;
 
     @Autowired
     public CharactersController(
             CharactersService charactersService,
-            SkillsService skillsService,
             CharactersTypeService charactersTypeService
     ) {
         this.charactersService = charactersService;
-        this.skillsService = skillsService;
         this.charactersTypeService = charactersTypeService;
     }
 
@@ -69,12 +64,5 @@ public class CharactersController {
     public ResponseEntity<List<TypeDTO>> getAllTypes() {
         List<TypeDTO> types = charactersTypeService.getAllCharactersType();
         return ResponseEntity.ok(types);
-    }
-
-    // 🔹 Récupérer tous les skills
-    @GetMapping("/skills")
-    public ResponseEntity<List<SkillsDTO>> getAllSkills() {
-        List<SkillsDTO> skills = skillsService.getAllSkills();
-        return ResponseEntity.ok(skills);
     }
 }

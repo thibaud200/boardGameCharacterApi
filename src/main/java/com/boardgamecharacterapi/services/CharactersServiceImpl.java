@@ -75,20 +75,6 @@ public class CharactersServiceImpl implements CharactersService {
                 .game(game)
                 .build();
 
-        // Gère les skills
-        /*if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
-            Set<Skills> skills = new HashSet<>();
-            for (SkillsDTO skillDTO : dto.getSkills()) {
-                Skills skill = skillsRepository.findByNameIgnoreCase(skillDTO.getName())
-                        .orElse(Skills.builder()
-                                .name(skillDTO.getName())
-                                .description(skillDTO.getDescription())
-                                .build());
-                skills.add(skill);
-            }
-            character.setSkills(skills);
-        }*/
-
         if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
             Set<Skills> skills = new HashSet<>();
 
@@ -106,7 +92,6 @@ public class CharactersServiceImpl implements CharactersService {
                 // (très important pour que Hibernate gère bien la table de jointure)
                 skill.getCharacters().add(character);
             }
-
             character.setSkills(skills);
         }
 

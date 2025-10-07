@@ -35,6 +35,12 @@ public class SkillsServiceImpl implements SkillsService {
                 .map(this::convertToDTO);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<SkillsDTO> searchSkillByName(String name) {
+        return skillsRepository.findByNameIgnoreCase(name)
+                .map(this::convertToDTO);
+    }
+
     @Override
     public SkillsDTO saveSkill(SkillsDTO dto) {
         if (dto == null) {
@@ -46,9 +52,9 @@ public class SkillsServiceImpl implements SkillsService {
     }
 
     @Override
-    public SkillsDTO updateSkill(Long id, SkillsDTO dto) {
-        Skills existing = skillsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id: " + id));
+    public SkillsDTO updateSkill(SkillsDTO dto) {
+        Skills existing = skillsRepository.findById(dto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id: " + dto.getId()));
 
         if (dto.getName() != null) existing.setName(dto.getName());
         if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
