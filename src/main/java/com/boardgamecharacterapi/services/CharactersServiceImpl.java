@@ -5,11 +5,15 @@ import com.boardgamecharacterapi.models.Games;
 import com.boardgamecharacterapi.models.Skills;
 import com.boardgamecharacterapi.models.Type;
 import com.boardgamecharacterapi.models.dto.CharactersDTO;
+import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import com.boardgamecharacterapi.repository.CharactersRepository;
 import com.boardgamecharacterapi.ResourceNotFoundException;
+import com.boardgamecharacterapi.repository.GamesRepository;
+import com.boardgamecharacterapi.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,9 +24,13 @@ import java.util.stream.Collectors;
 public class CharactersServiceImpl implements CharactersService {
 
     private final CharactersRepository charactersRepository;
+    private final GamesRepository gamesRepository;
+    private final SkillsRepository skillsRepository;
 
-    public CharactersServiceImpl(CharactersRepository charactersRepository) {
+    public CharactersServiceImpl(CharactersRepository charactersRepository, GamesRepository gamesRepository, SkillsRepository skillsRepository) {
         this.charactersRepository = charactersRepository;
+        this.gamesRepository = gamesRepository;
+        this.skillsRepository = skillsRepository;
     }
 
     // =============================
@@ -56,12 +64,32 @@ public class CharactersServiceImpl implements CharactersService {
     // =============================
     @Override
     public CharactersDTO saveCharacter(CharactersDTO dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("Character cannot be null");
+        // Vérifie que le jeu existe
+        Games game = gamesRepository.findById(dto.getGameId())
+                .orElseThrow(() -> new ResourceNotFoundException("Game not found with id: " + dto.getGameId()));
+
+        // Conversion
+        Characters character = Characters.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .game(game)
+                .build();
+
+        // Gère les skills
+        if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
+            Set<Skills> skills = new HashSet<>();
+            for (SkillsDTO skillDTO : dto.getSkills()) {
+                Skills skill = skillsRepository.findByNameIgnoreCase(skillDTO.getName())
+                        .orElse(Skills.builder()
+                                .name(skillDTO.getName())
+                                .description(skillDTO.getDescription())
+                                .build());
+                skills.add(skill);
+            }
+            character.setSkills(skills);
         }
 
-        Characters entity = convertToEntity(dto);
-        Characters saved = charactersRepository.save(entity);
+        Characters saved = charactersRepository.save(character);
         return convertToDTO(saved);
     }
 

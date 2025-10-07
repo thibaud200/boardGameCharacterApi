@@ -35,7 +35,7 @@ public class Characters {
     private Type type;
 
     // 🔗 Relation avec Skills (ManyToMany)
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "characters_skills",
             joinColumns = @JoinColumn(name = "character_id"),

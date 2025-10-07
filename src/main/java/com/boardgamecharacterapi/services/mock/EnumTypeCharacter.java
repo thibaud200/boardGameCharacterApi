@@ -1,4 +1,4 @@
-package com.boardgamecharacterapi.services;
+package com.boardgamecharacterapi.services.mock;
 
 public enum EnumTypeCharacter {
     WARRIOR,
