@@ -76,7 +76,7 @@ public class CharactersServiceImpl implements CharactersService {
                 .build();
 
         // Gère les skills
-        if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
+        /*if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
             Set<Skills> skills = new HashSet<>();
             for (SkillsDTO skillDTO : dto.getSkills()) {
                 Skills skill = skillsRepository.findByNameIgnoreCase(skillDTO.getName())
@@ -86,6 +86,27 @@ public class CharactersServiceImpl implements CharactersService {
                                 .build());
                 skills.add(skill);
             }
+            character.setSkills(skills);
+        }*/
+
+        if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
+            Set<Skills> skills = new HashSet<>();
+
+            for (SkillsDTO skillDTO : dto.getSkills()) {
+                Skills skill = skillsRepository.findByNameIgnoreCase(skillDTO.getName())
+                        .orElse(Skills.builder()
+                                .name(skillDTO.getName())
+                                .description(skillDTO.getDescription())
+                                .build());
+
+                // 🔗 Ajoute le skill au perso
+                skills.add(skill);
+
+                // 🔄 Et ajoute le perso dans la liste inverse du skill
+                // (très important pour que Hibernate gère bien la table de jointure)
+                skill.getCharacters().add(character);
+            }
+
             character.setSkills(skills);
         }
 
@@ -131,12 +152,12 @@ public class CharactersServiceImpl implements CharactersService {
                 .gameName(c.getGame() != null ? c.getGame().getTitle() : null)
                 .typeNames(c.getType() != null ? c.getType().getName() : null)
                 .skills(c.getSkills().stream()
-                        .map(s -> new com.boardgamecharacterapi.models.dto.SkillsDTO(
-                                s.getId(),
-                                s.getName(),
-                                s.getDescription()
-                        ))
-                        .toList())
+                    .map(s -> new com.boardgamecharacterapi.models.dto.SkillsDTO(
+                        s.getId(),
+                        s.getName(),
+                        s.getDescription()
+                    ))
+                    .toList())
                 .build();
     }
 
@@ -160,12 +181,12 @@ public class CharactersServiceImpl implements CharactersService {
 
         if (dto.getSkills() != null) {
             Set<Skills> skills = dto.getSkills().stream()
-                    .map(s -> Skills.builder()
-                            .id(s.getId())
-                            .name(s.getName())
-                            .description(s.getDescription())
-                            .build())
-                    .collect(Collectors.toSet());
+                .map(s -> Skills.builder()
+                    .id(s.getId())
+                    .name(s.getName())
+                    .description(s.getDescription())
+                    .build())
+                .collect(Collectors.toSet());
             c.setSkills(skills);
         }
 

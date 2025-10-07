@@ -15,46 +15,70 @@ import java.util.Optional;
 public class GamesServiceImpl implements GamesService {
 
     private final GamesRepository gamesRepository;
+    CharactersService charactersService;
 
     // Constructor injection (meilleure pratique que @Autowired sur le champ)
-    public GamesServiceImpl(GamesRepository gamesRepository) {
+    public GamesServiceImpl(GamesRepository gamesRepository, CharactersService charactersService) {
         this.gamesRepository = gamesRepository;
+        this.charactersService = charactersService;
+    }
+    private List<GamesDTO> getAllGamesInternal(boolean includeCharacters) {
+        return gamesRepository.findAll().stream()
+                .map(game -> convertToDTO(game, includeCharacters))
+                .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<GamesDTO> getAllGames() {
-        return gamesRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .toList();
+        // version simple sans personnages
+        return getAllGamesInternal(false);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GamesDTO> searchGamesByTitle(String title) {
+    public List<GamesDTO> getAllGamesDetails() {
+        // version avec personnages
+        return getAllGamesInternal(true);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GamesDTO> getAllGamesSimple() {
+        // même logique, on choisit ce qu’on veut afficher
+        return getAllGamesInternal(false);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GamesDTO> getAllGamesChar() {
+        // si tu veux uniquement ceux liés à un personnage
+        return getAllGamesInternal(true);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GamesDTO> searchGamesByTitle(String title, boolean includeCharacters) {
         return gamesRepository.findByTitleContainingIgnoreCase(title).stream()
-                .map(this::convertToDTO)
-                .toList();
+            .map(game -> convertToDTO(game, includeCharacters))
+            .toList();
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public Optional<GamesDTO> getGameById(Long id) {
-        return gamesRepository.findById(id).map(this::convertToDTO);
+    public Optional<GamesDTO> getGameById(Long id, boolean includeCharacters) {
+        return gamesRepository.findById(id)
+                .map(game -> convertToDTO(game, includeCharacters));
     }
 
-    @Override
-    public GamesDTO saveGame(GamesDTO gameDTO) {
+    public GamesDTO saveGame(GamesDTO gameDTO, boolean includeCharacters) {
         if (gameDTO == null) {
             throw new IllegalArgumentException("Game cannot be null");
         }
         Games entity = convertToEntity(gameDTO);
         Games saved = gamesRepository.save(entity);
-        return convertToDTO(saved);
+        return convertToDTO(saved, includeCharacters);
     }
 
-    @Override
-    public GamesDTO updateGame(GamesDTO gameDTO) {
+    public GamesDTO updateGame(GamesDTO gameDTO, boolean includeCharacters) {
         if (gameDTO == null) {
             throw new IllegalArgumentException("Game cannot be null");
         }
@@ -68,10 +92,9 @@ public class GamesServiceImpl implements GamesService {
         if (gameDTO.getReleaseYear() != null) existingGame.setReleaseYear(gameDTO.getReleaseYear());
 
         Games updated = gamesRepository.save(existingGame);
-        return convertToDTO(updated);
+        return convertToDTO(updated, includeCharacters);
     }
 
-    @Override
     public void deleteGame(Long id) {
         if (!gamesRepository.existsById(id)) {
             throw new ResourceNotFoundException("Game not found with id: " + id);
@@ -79,13 +102,19 @@ public class GamesServiceImpl implements GamesService {
         gamesRepository.deleteById(id);
     }
 
-    private GamesDTO convertToDTO(Games game) {
-        return GamesDTO.builder()
-                .id(game.getId())
-                .title(game.getTitle())
-                .description(game.getDescription())
-                .releaseYear(game.getReleaseYear())
-                .build();
+    private GamesDTO convertToDTO(Games game, boolean includeCharacters) {
+        GamesDTO.GamesDTOBuilder builder = GamesDTO.builder()
+            .id(game.getId())
+            .title(game.getTitle())
+            .description(game.getDescription())
+            .releaseYear(game.getReleaseYear());
+
+        if (includeCharacters) {
+            builder.characters(charactersService.getAllCharacters());
+        }
+
+        // On construit l’objet final
+        return builder.build();
     }
 
     private Games convertToEntity(GamesDTO dto) {

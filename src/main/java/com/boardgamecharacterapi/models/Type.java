@@ -15,6 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Type {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,6 +26,7 @@ public class Type {
     private String description;
 
     // 🔗 Un type peut être utilisé par plusieurs personnages
+    @Builder.Default
     @OneToMany(mappedBy = "type")
     private Set<Characters> characters = new HashSet<>();
 }
