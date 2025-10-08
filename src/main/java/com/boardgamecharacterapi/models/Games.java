@@ -24,7 +24,7 @@ public class Games {
 
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer releaseYear;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
