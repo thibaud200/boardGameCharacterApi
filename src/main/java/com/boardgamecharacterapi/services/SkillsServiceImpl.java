@@ -2,6 +2,7 @@ package com.boardgamecharacterapi.services;
 
 import com.boardgamecharacterapi.ResourceNotFoundException;
 import com.boardgamecharacterapi.models.Skills;
+import com.boardgamecharacterapi.models.dto.CharactersDTO;
 import com.boardgamecharacterapi.models.dto.SkillsDTO;
 import com.boardgamecharacterapi.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,14 @@ public class SkillsServiceImpl implements SkillsService {
     public Optional<SkillsDTO> getSkillsById(Long id) {
         return skillsRepository.findById(id)
                 .map(this::convertToDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SkillsDTO> getSkillsByCharId(Long charId) {
+        return skillsRepository.findSkillsByCharacters_Id(charId).stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     @Transactional(readOnly = true)

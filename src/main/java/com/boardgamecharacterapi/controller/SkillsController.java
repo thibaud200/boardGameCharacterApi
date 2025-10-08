@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -38,9 +39,16 @@ public class SkillsController {
     }
 
     @GetMapping("/skills/search")
-    public ResponseEntity<List<SkillsDTO>> searchGamesByTitle(@RequestParam String name) {
-        List<SkillsDTO> skills = skillsService.searchSkillByName(name);
+    public ResponseEntity<Optional<SkillsDTO>> searchGamesByName(@RequestParam String name) {
+        Optional<SkillsDTO> skills = skillsService.searchSkillByName(name);
         return ResponseEntity.ok(skills);
+    }
+
+    // 🔹 Récupérer les personnages d’un jeu
+    @GetMapping("/skills/characters/{charId}")
+    public ResponseEntity<List<SkillsDTO>> getCharactersByGame(@PathVariable Long charId) {
+        List<SkillsDTO> characters = skillsService.getSkillsByCharId(charId);
+        return ResponseEntity.ok(characters);
     }
 
     @PostMapping
